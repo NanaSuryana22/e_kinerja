@@ -30,87 +30,130 @@
                         <div class="card">
                             <div class="card-content">
                                 <div class="card-body">
-                                    <form class="form" action="{{ route('pegawai.store') }}" method="post" enctype="multipart/form-data">
+                                    <form class="form" action="{{ route('pegawai.store') }}" method="post"
+                                        enctype="multipart/form-data">
                                         {{ csrf_field() }}
                                         <div class="row">
                                             <div class="col-md-12 col-12">
                                                 <div class="form-group">
                                                     <label for="nip">NIP</label>
-                                                    <input type="text" id="nip" class="form-control @error('nip') is-invalid @enderror"
-                                                        placeholder="Silahkan Isi NIP Pegawai.." name="nip" value="{{ old('nip') }}" required>
+                                                    <input type="text" id="nip"
+                                                        class="form-control @error('nip') is-invalid @enderror"
+                                                        placeholder="Silahkan Isi NIP Pegawai.." name="nip"
+                                                        value="{{ old('nip') }}" required>
                                                     @if($errors->has('nip'))
-                                                      <span class="invalid-feedback" role="alert">
+                                                    <span class="invalid-feedback" role="alert">
                                                         <strong>{{$errors->first('nip') }}</strong>
-                                                      </span>
+                                                    </span>
                                                     @endif
                                                 </div>
                                                 <div class="form-group">
-                                                  <label for="nama">Nama Pegawai</label>
-                                                  <input type="text" id="nama" class="form-control @error('nama') is-invalid @enderror"
-                                                      placeholder="Silahkan Isi Nama Pegawai.." name="nama" value="{{ old('nama') }}" required>
-                                                  @if($errors->has('nama'))
+                                                    <label for="nama">Nama Pegawai</label>
+                                                    <input type="text" id="nama"
+                                                        class="form-control @error('nama') is-invalid @enderror"
+                                                        placeholder="Silahkan Isi Nama Pegawai.." name="nama"
+                                                        value="{{ old('nama') }}" required>
+                                                    @if($errors->has('nama'))
                                                     <span class="invalid-feedback" role="alert">
-                                                      <strong>{{$errors->first('nama') }}</strong>
+                                                        <strong>{{$errors->first('nama') }}</strong>
                                                     </span>
-                                                  @endif
+                                                    @endif
                                                 </div>
-                                              <div class="form-group">
-                                                <label for="alamat">Alamat</label>
-                                                <textarea name="alamat" id="alamat" class="form-control" required>{{ old('alamat') }}</textarea>
-                                                @if($errors->has('alamat'))
-                                                  <span class="invalid-feedback" role="alert">
-                                                    <strong>{{$errors->first('alamat') }}</strong>
-                                                  </span>
-                                                @endif
-                                              </div>
-                                              <div class="form-group">
-                                                <label for="no_telp">Nomor Telp.</label>
-                                                <input type="text" id="no_telp" class="form-control @error('no_telp') is-invalid @enderror"
-                                                    placeholder="Silahkan Isi Nomor Telp. Pegawai.." name="no_telp" value="{{ old('no_telp') }}" required>
-                                                @if($errors->has('no_telp'))
-                                                  <span class="invalid-feedback" role="alert">
-                                                    <strong>{{$errors->first('no_telp') }}</strong>
-                                                  </span>
-                                                @endif
-                                              </div>
-                                              <div class="form-group">
-                                                <label for="tempat_lahir">Tempat Lahir.</label>
-                                                <input type="text" id="tempat_lahir" class="form-control @error('tempat_lahir') is-invalid @enderror"
-                                                    placeholder="Silahkan Isi Tempat Lahir.." name="tempat_lahir" value="{{ old('tempat_lahir') }}" required>
-                                                @if($errors->has('tempat_lahir'))
-                                                  <span class="invalid-feedback" role="alert">
-                                                    <strong>{{$errors->first('tempat_lahir') }}</strong>
-                                                  </span>
-                                                @endif
-                                              </div>
-                                              <div class="form-group">
-                                                <label for="tanggal_lahir">Tanggal Lahir.</label>
-                                                <input type="date" id="tanggal_lahir" class="form-control @error('tanggal_lahir') is-invalid @enderror"
-                                                    placeholder="Silahkan Isi Tanggal Lahir.." name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" required>
-                                                @if($errors->has('tanggal_lahir'))
-                                                  <span class="invalid-feedback" role="alert">
-                                                    <strong>{{$errors->first('tanggal_lahir') }}</strong>
-                                                  </span>
-                                                @endif
-                                              </div>
-                                              <div class="form-group">
-                                                <label for="jabatan_id">Pilih Jabatan</label>
-                                                <select name="jabatan_id" id="jabatan_id" class="form-control @error('jabatan_id') is-invalid @enderror" value="{{ old('jabatan_id') }}">
-                                                    @foreach($jabatan as $k)
-                                                      <option value="{{ $k->id}}">{{ $k->nama }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @if($errors->has('jabatan_id'))
+                                                <div class="divider">
+                                                    <div class="divider-text">Akun Login</div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="email">Email (Username)</label>
+                                                    <input type="email" id="email"
+                                                        class="form-control @error('email') is-invalid @enderror"
+                                                        placeholder="Email untuk login.." name="email"
+                                                        value="{{ old('email') }}" required>
+                                                    @error('email')
+                                                    <span
+                                                        class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                                                    @enderror
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="password">Password</label>
+                                                    <input type="password" id="password"
+                                                        class="form-control @error('password') is-invalid @enderror"
+                                                        placeholder="Password login.." name="password" required>
+                                                    @error('password')
+                                                    <span
+                                                        class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                                                    @enderror
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="alamat">Alamat</label>
+                                                    <textarea name="alamat" id="alamat" class="form-control"
+                                                        required>{{ old('alamat') }}</textarea>
+                                                    @if($errors->has('alamat'))
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{$errors->first('alamat') }}</strong>
+                                                    </span>
+                                                    @endif
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="no_telp">Nomor Telp.</label>
+                                                    <input type="text" id="no_telp"
+                                                        class="form-control @error('no_telp') is-invalid @enderror"
+                                                        placeholder="Silahkan Isi Nomor Telp. Pegawai.." name="no_telp"
+                                                        value="{{ old('no_telp') }}" required>
+                                                    @if($errors->has('no_telp'))
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{$errors->first('no_telp') }}</strong>
+                                                    </span>
+                                                    @endif
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="tempat_lahir">Tempat Lahir.</label>
+                                                    <input type="text" id="tempat_lahir"
+                                                        class="form-control @error('tempat_lahir') is-invalid @enderror"
+                                                        placeholder="Silahkan Isi Tempat Lahir.." name="tempat_lahir"
+                                                        value="{{ old('tempat_lahir') }}" required>
+                                                    @if($errors->has('tempat_lahir'))
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{$errors->first('tempat_lahir') }}</strong>
+                                                    </span>
+                                                    @endif
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="tanggal_lahir">Tanggal Lahir.</label>
+                                                    <input type="date" id="tanggal_lahir"
+                                                        class="form-control @error('tanggal_lahir') is-invalid @enderror"
+                                                        placeholder="Silahkan Isi Tanggal Lahir.." name="tanggal_lahir"
+                                                        value="{{ old('tanggal_lahir') }}" required>
+                                                    @if($errors->has('tanggal_lahir'))
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{$errors->first('tanggal_lahir') }}</strong>
+                                                    </span>
+                                                    @endif
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="jabatan_id">Pilih Jabatan</label>
+                                                    <select name="jabatan_id" id="jabatan_id"
+                                                        class="form-control @error('jabatan_id') is-invalid @enderror"
+                                                        value="{{ old('jabatan_id') }}">
+                                                        @foreach($jabatan as $k)
+                                                        <option value="{{ $k->id}}">{{ $k->nama }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if($errors->has('jabatan_id'))
                                                     <span class="invalid-feedback" role="alert">
                                                         <strong>{{$errors->first('jabatan_id') }}</strong>
                                                     </span>
-                                                @endif
+                                                    @endif
+                                                </div>
                                             </div>
-									                          </div>
                                             <div class="col-12">
-                                                <button type="submit" class="btn btn-primary me-1 mb-1 pull-left">Simpan</button>
-                                                <button type="reset" class="btn btn-warning me-1 mb-1 pull-left">Reset</button>
-                                                <a class="btn btn-info me-1 mb-1 pull-right" href="{{ url()->previous() }}">Kembali</a>
+                                                <button type="submit"
+                                                    class="btn btn-primary me-1 mb-1 pull-left">Simpan</button>
+                                                <button type="reset"
+                                                    class="btn btn-warning me-1 mb-1 pull-left">Reset</button>
+                                                <a class="btn btn-info me-1 mb-1 pull-right"
+                                                    href="{{ url()->previous() }}">Kembali</a>
                                             </div>
                                         </div>
                                     </form>

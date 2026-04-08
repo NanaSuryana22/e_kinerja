@@ -35,6 +35,7 @@
 								<th class="th-font">Nomor</th>
 								<th class="th-font">NIP</th>
 								<th class="th-font">Nama</th>
+								<th class="th-font">Email/Login</th>
 								<th class="th-font">Alamat </th>
 								<th class="th-font">Nomor Telp.</th>
 								<th class="th-font">Tempat Lahir</th>
@@ -49,6 +50,7 @@
 									<td class="th-font" data-title="Nomor">{{ ++$no + ($datas->currentPage()-1) * $datas->perPage() }}</td>
 									<td class="th-font" data-title="NIP">{{ $data->nip }}</td>
 									<td class="th-font" data-title="Nama">{{ $data->nama }}</td>
+									<td class="th-font" data-title="Email">{{ $data->user->email ?? '-' }}</td>
 									<td class="th-font" data-title="Alamat">{{ $data->alamat }}</td>
 									<td class="th-font" data-title="No. Telp">{{ $data->no_telp }}</td>
 									<td class="th-font" data-title="Tempat Lahir">{{ $data->tempat_lahir }}</td>

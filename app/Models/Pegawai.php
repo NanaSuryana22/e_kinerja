@@ -22,4 +22,8 @@ class Pegawai extends Model
     public function kinerjas() {
         return $this->hasMany('App\Models\Kinerja', 'pegawai_id');
     }
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }

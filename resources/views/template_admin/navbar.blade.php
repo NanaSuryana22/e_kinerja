@@ -18,8 +18,10 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <div class="user-name text-end me-3">
-                      <h6 class="mb-0 text-gray-600">Nana Suryana</h6>
-                      <p class="mb-0 text-sm text-gray-600">Sofware Engineer</p>
+                      <h6 class="mb-0 text-gray-600">{{ auth()->user()->name }}</h6>
+                      <p class="mb-0 text-sm text-gray-600">
+                        {{ ucfirst(auth()->user()->role) }}
+                      </p>
                     </div>
                 </ul>
                 <div class="dropdown">
@@ -38,8 +40,8 @@
                                     onclick="return logout(event);"
                                     title="Keluar Aplikasi ?">
                                     <i class="fas fa-power-off fa-2x" aria-hidden="true"></i>
-                                    <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                                      {{ csrf_field() }}
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
                                     </form>
                                 </a>
                             </div>

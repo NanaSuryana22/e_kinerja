@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TugasJabatan;
+use App\Models\Jabatan;
 use Illuminate\Http\Request;
 use Session;
 
@@ -26,7 +27,9 @@ class TugasJabatanController extends Controller
      */
     public function create()
     {
-        return view('tugas_jabatan.create');
+        $jabatan = Jabatan::orderBy('nama', 'asc')->get();
+
+        return view('tugas_jabatan.create')->with('jabatan', $jabatan);
     }
 
     /**
@@ -39,6 +42,7 @@ class TugasJabatanController extends Controller
     {
         $data = new TugasJabatan();
         $data->nama_tugas = $request->nama_tugas;
+        $data->jabatan_id = $request->jabatan_id;
         $data->bobot_penilaian = $request->bobot_penilaian;
         $data->save();
 
@@ -65,7 +69,9 @@ class TugasJabatanController extends Controller
      */
     public function edit(TugasJabatan $tugasJabatan)
     {
-        return view('tugas_jabatan.edit', compact('tugasJabatan'));
+        $jabatan = Jabatan::orderBy('nama', 'asc')->get();
+
+        return view('tugas_jabatan.edit', compact('tugasJabatan'))->with('jabatan', $jabatan);
     }
 
     /**
@@ -79,6 +85,7 @@ class TugasJabatanController extends Controller
     {
         $data = TugasJabatan::find($id);
         $data->nama_tugas = $request->nama_tugas;
+        $data->jabatan_id = $request->jabatan_id;
         $data->bobot_penilaian = $request->bobot_penilaian;
         $data->save();
 

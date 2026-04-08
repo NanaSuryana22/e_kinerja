@@ -12,10 +12,15 @@ class TugasJabatan extends Model
     protected $table = "tugas_jabatans";
 
     protected $fillable = [
-        'nama_tugas', 'bobot_penilaian'
+        'nama_tugas', 'bobot_penilaian', 'jabatan_id'
     ];
 
     public function kinerjas() {
         return $this->hasMany('App\Models\Kinerja', 'tugas_jabatan_id');
+    }
+
+    public function jabatan(): BelongsTo
+    {
+        return $this->belongsTo(Jabatan::class);
     }
 }

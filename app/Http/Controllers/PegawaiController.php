@@ -4,113 +4,109 @@ namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
 use App\Models\Jabatan;
+use App\Models\User; // Tambahkan ini
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB; // Tambahkan ini untuk transaksi
+use Illuminate\Support\Facades\Hash; // Tambahkan ini untuk password
 use Session;
 
 class PegawaiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $datas = Pegawai::orderBy('created_at', 'desc')->paginate(10);
+        $datas = Pegawai::with('jabatan', 'user')->orderBy('created_at', 'desc')->paginate(10);
         return view('pegawai.index')->with('datas', $datas);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $jabatan = Jabatan::orderBy('nama', 'asc')->get();
         return view('pegawai.create')->with('jabatan', $jabatan);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        $data = new Pegawai();
-        $data->nama = $request->nama;
-        $data->nip = $request->nip;
-        $data->alamat = $request->alamat;
-        $data->no_telp = $request->no_telp;
-        $data->tanggal_lahir = $request->tanggal_lahir;
-        $data->jabatan_id = $request->jabatan_id;
-        $data->tempat_lahir = $request->tempat_lahir;
-        $data->save();
+        // Validasi input
+        $request->validate([
+            'nip' => 'required|unique:pegawais,nip',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+        ]);
 
-        Session::flash("notice", "Pegawai $data->nama Berhasil Dibuat.");
+        // Gunakan Database Transaction agar jika salah satu gagal, semua dibatalkan
+        DB::transaction(function () use ($request) {
+            // 1. Buat User Account
+            $user = User::create([
+                'name' => $request->nama,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => 'pegawai', // Default role
+            ]);
+
+            // 2. Buat Data Pegawai
+            $pegawai = new Pegawai();
+            $pegawai->user_id = $user->id; // Hubungkan ke ID User
+            $pegawai->nama = $request->nama;
+            $pegawai->nip = $request->nip;
+            $pegawai->alamat = $request->alamat;
+            $pegawai->no_telp = $request->no_telp;
+            $pegawai->tanggal_lahir = $request->tanggal_lahir;
+            $pegawai->jabatan_id = $request->jabatan_id;
+            $pegawai->tempat_lahir = $request->tempat_lahir;
+            $pegawai->save();
+        });
+
+        Session::flash("notice", "Pegawai $request->nama dan akun login berhasil dibuat.");
         return redirect()->route("pegawai.index");
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Pegawai  $pegawai
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Pegawai $pegawai)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Pegawai  $pegawai
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Pegawai $pegawai)
     {
         $jabatan = Jabatan::orderBy('nama', 'asc')->get();
+        // Pastikan relasi user terpanggil
         return view('pegawai.edit', compact('pegawai'))->with('jabatan', $jabatan);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Pegawai  $pegawai
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        $data = Pegawai::find($id);
-        $data->nama = $request->nama;
-        $data->nip = $request->nip;
-        $data->alamat = $request->alamat;
-        $data->no_telp = $request->no_telp;
-        $data->tanggal_lahir = $request->tanggal_lahir;
-        $data->jabatan_id = $request->jabatan_id;
-        $data->tempat_lahir = $request->tempat_lahir;
-        $data->save();
+        $pegawai = Pegawai::findOrFail($id);
+        
+        DB::transaction(function () use ($request, $pegawai) {
+            // 1. Update User Account
+            $user = User::findOrFail($pegawai->user_id);
+            $user->name = $request->nama;
+            $user->email = $request->email;
+            if ($request->password) {
+                $user->password = Hash::make($request->password);
+            }
+            $user->save();
 
-        Session::flash("notice", "Pegawai $data->nama Berhasil Diubah.");
+            // 2. Update Data Pegawai
+            $pegawai->nama = $request->nama;
+            $pegawai->nip = $request->nip;
+            $pegawai->alamat = $request->alamat;
+            $pegawai->no_telp = $request->no_telp;
+            $pegawai->tanggal_lahir = $request->tanggal_lahir;
+            $pegawai->jabatan_id = $request->jabatan_id;
+            $pegawai->tempat_lahir = $request->tempat_lahir;
+            $pegawai->save();
+        });
+
+        Session::flash("notice", "Data Pegawai $request->nama berhasil diperbarui.");
         return redirect()->route("pegawai.index");
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Pegawai  $pegawai
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        $data = Pegawai::find($id);
-        $data->delete();
+        $pegawai = Pegawai::find($id);
+        
+        DB::transaction(function () use ($pegawai) {
+            // Hapus Usernya dulu, maka data pegawai otomatis terpengaruh (tergantung setting FK)
+            User::where('id', $pegawai->user_id)->delete();
+            $pegawai->delete();
+        });
 
-        Session::flash("notice", "Pegawai terpilih berhasil dihapus");
+        Session::flash("notice", "Pegawai dan akun login berhasil dihapus.");
         return redirect()->route("pegawai.index");
     }
 }

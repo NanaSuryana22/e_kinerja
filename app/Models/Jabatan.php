@@ -18,4 +18,9 @@ class Jabatan extends Model
     public function pegawai() {
         return $this->hasOne('App\Models\Jabatan', 'jabatan_id');
     }
+
+    public function tugas(): HasMany
+    {
+        return $this->hasMany(TugasJabatan::class);
+    }
 }

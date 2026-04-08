@@ -21,7 +21,7 @@
 <section class="section">
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title">Form Input Tugas Jabatan</h4>
+            <h4 class="card-title">Form Edit Tugas Jabatan</h4>
         </div>
         <div class="card-body">
             <section id="multiple-column-form">
@@ -42,6 +42,19 @@
                                                       <span class="invalid-feedback" role="alert">
                                                         <strong>{{$errors->first('nama_tugas') }}</strong>
                                                       </span>
+                                                    @endif
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="jabatan_id">Pilih Jabatan</label>
+                                                    <select name="jabatan_id" id="jabatan_id" class="form-control @error('jabatan_id') is-invalid @enderror" value="{{ old('jabatan_id') }}">
+                                                        @foreach($jabatan as $k)
+                                                        <option value="{{ $k->id}}">{{ $k->nama }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if($errors->has('jabatan_id'))
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{$errors->first('jabatan_id') }}</strong>
+                                                        </span>
                                                     @endif
                                                 </div>
                                                 <div class="form-group">

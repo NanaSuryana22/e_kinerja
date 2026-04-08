@@ -12,14 +12,14 @@ class Kinerja extends Model
     protected $table = "kinerjas";
 
     protected $fillable = [
-        'pegawai_id', 'tugas_jabatan_id'
+        'pegawai_id', 'tugas_jabatan_id', 'tanggal_selesai', 'nilai', 'status', 'foto_bukti', 'catatan_atasan'
     ];
 
-    public function pegawais() {
-        return $this->belongsTo('App\Models\Pegawai', 'pegawai_id');
+    public function pegawai() {
+        return $this->belongsTo(Pegawai::class, 'pegawai_id');
     }
 
-    public function tugas_jabatans() {
-        return $this->belongsTo('App\Models\TugasJabatan', 'tugas_jabatan_id');
+    public function tugas_jabatan() {
+        return $this->belongsTo(TugasJabatan::class, 'tugas_jabatan_id');
     }
 }
