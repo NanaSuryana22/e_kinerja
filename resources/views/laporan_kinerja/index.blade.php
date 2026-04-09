@@ -38,6 +38,8 @@
                                 <th class="th-font">Jabatan </th>
                                 <th class="th-font">Tugas Jabatan </th>
                                 <th class="th-font">Bobot Penilaian </th>
+                                <th class="th-font">Nilai Atasan</th>
+                                <th class="th-font">Total Skor</th>
                                 <th class="th-font">Aksi</th>
                             </tr>
                         </thead>
@@ -51,7 +53,12 @@
                                 <td class="th-font" data-title="Tugas Jabatan">{{ $data->tugas_jabatan->nama_tugas }}
                                 </td>
                                 <td class="th-font" data-title="Bobot Penilaian">
-                                    {{ $data->tugas_jabatan->bobot_penilaian }}</td>
+                                    {{ $data->tugas_jabatan->bobot_penilaian }}
+                                </td>
+                                <td>{{ $data->nilai ?? '-' }}</td>
+                                <td class="fw-bold text-primary">
+                                    {{ number_format($data->total_skor, 0, ',', '.') }}
+                                </td>
                                 <td class="th-font" data-title="Aksi">
                                     <form action="{{ route('laporan_kinerja.destroy', $data->id) }}" method="post">
                                         @csrf
@@ -61,11 +68,12 @@
                                             href="{{ route('laporan_kinerja.show', $data->id) }}" title="Lihat Detail">
                                             <i class="fa fa-eye"></i>
                                         </a>
-
-                                        <a class="btn btn-sm btn-warning"
-                                            href="{{ route('laporan_kinerja.edit', $data->id) }}" title="Ubah Data">
-                                            <i class="fa fa-pencil"></i>
-                                        </a>
+                                        @if($data->status == 'pending')
+                                            <a class="btn btn-sm btn-warning"
+                                                href="{{ route('laporan_kinerja.edit', $data->id) }}" title="Ubah Data">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                        @endif
 
                                         @if(Auth::user()->role == 'admin' || $data->status == 'pending')
                                         <button class="btn btn-sm btn-danger" type="submit"

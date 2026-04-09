@@ -65,7 +65,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="status">Status Persetujuan</label>
-                            <select name="status" id="status" class="form-control border-primary" {{ Auth::user()->role != 'admin' ? '' : 'disabled' }}>
+                            <select name="status" id="status" class="form-control border-primary" {{ Auth::user()->role != 'admin' ? 'disabled' : '' }}>
                                 <option value="pending" {{ $data->status == 'pending' ? 'selected' : '' }}>Pending</option>
                                 <option value="approved" {{ $data->status == 'approved' ? 'selected' : '' }}>Approved</option>
                                 <option value="rejected" {{ $data->status == 'rejected' ? 'selected' : '' }}>Rejected</option>

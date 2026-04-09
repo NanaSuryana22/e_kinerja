@@ -37,6 +37,14 @@
                             <td><span class="badge bg-info">{{ $data->tugas_jabatan->bobot_penilaian }}</span></td>
                         </tr>
                         <tr>
+                            <th>Nilai Atasan</th>
+                            <td><span class="badge bg-info">{{ $data->nilai ?? '-' }}</span></td>
+                        </tr>
+                        <tr>
+                            <th>Total Skor</th>
+                            <td><span class="badge bg-info">{{ number_format($data->total_skor, 0, ',', '.') }}</span></td>
+                        </tr>
+                        <tr>
                             <th>Tanggal Selesai</th>
                             <td>{{ \Carbon\Carbon::parse($data->tanggal_selesai)->format('d F Y') }}</td>
                         </tr>
@@ -90,9 +98,11 @@
                     </div>
 
                     <div class="mt-4 d-grid gap-2">
-                        <a href="{{ route('laporan_kinerja.edit', $data->id) }}" class="btn btn-primary">
-                            <i class="bi bi-pencil"></i> Edit / Beri Nilai
-                        </a>
+                        @if(Auth::user()->role == 'admin' || $data->status == 'pending')
+                            <a href="{{ route('laporan_kinerja.edit', $data->id) }}" class="btn btn-primary">
+                                <i class="bi bi-pencil"></i> Edit / Beri Nilai
+                            </a>
+                        @endif
                         <a href="{{ route('laporan_kinerja.index') }}" class="btn btn-secondary">Kembali</a>
                     </div>
                 </div>

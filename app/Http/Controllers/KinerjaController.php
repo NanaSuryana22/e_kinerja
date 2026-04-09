@@ -8,6 +8,7 @@ use App\Models\TugasJabatan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Session;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class KinerjaController extends Controller
 {
@@ -38,6 +39,23 @@ class KinerjaController extends Controller
         }
 
         return view('laporan_kinerja.index')->with('datas', $datas);
+    }
+
+    public function cetakRapor(Request $request)
+    {
+        $user = Auth::user();
+        $pegawai = $user->pegawai;
+        $bulan = $request->bulan ?? now()->month;
+        $tahun = $request->tahun ?? now()->year;
+
+        $datas = Kinerja::where('pegawai_id', $pegawai->id)
+                        ->whereMonth('tanggal_selesai', $bulan)
+                        ->whereYear('tanggal_selesai', $tahun)
+                        ->get();
+
+        $pdf = Pdf::loadView('laporan_kinerja.pdf_rapor', compact('datas', 'pegawai', 'bulan', 'tahun'));
+        
+        return $pdf->download("Rapor_Kinerja_{$pegawai->nama}_{$bulan}_{$tahun}.pdf");
     }
 
     /**

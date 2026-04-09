@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\KinerjaService;
 
 class Kinerja extends Model
 {
@@ -21,5 +22,19 @@ class Kinerja extends Model
 
     public function tugas_jabatan() {
         return $this->belongsTo(TugasJabatan::class, 'tugas_jabatan_id');
+    }
+
+    /**
+     * Accessor untuk mendapatkan total skor secara otomatis.
+     */
+    public function getTotalSkorAttribute()
+    {
+        $service = new KinerjaService();
+        
+        // Mengambil bobot dari relasi tugas_jabatan dan nilai dari kolom di table ini
+        return $service->hitungSkor(
+            $this->tugas_jabatan->bobot_penilaian ?? 0, 
+            $this->nilai
+        );
     }
 }
